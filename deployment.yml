@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: barbosa-timetable
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: barbosa-timetable
+  template:
+    metadata:
+      labels:
+        app: barbosa-timetable
+    spec:
+
+      containers:
+      - name: barbosa-timetable
+        image: localhost:32000/barbosa-timetable
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 80
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    run: barbosa-timetable
+  name: barbosa-timetable
+spec:
+  ports:
+  - port: 80
+    nodePort: 30001
+  selector:
+    app: barbosa-timetable
+  type: LoadBalancer
