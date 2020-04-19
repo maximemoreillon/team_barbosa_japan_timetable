@@ -32,24 +32,6 @@ spec:
     app: barbosa-timetable
   type: ClusterIP
 ---
-apiVersion: certmanager.k8s.io/v1alpha1
-kind: Certificate
-metadata:
-  name: barbosa-timetable-certificate
-spec:
-  secretName: barbosa-timetable-secret
-  issuerRef:
-    name: letsencrypt-prod
-    kind: ClusterIssuer
-  dnsNames:
-  - barbosajapan.maximemoreillon.com
-  acme:
-    config:
-    - http01:
-        ingress: barbosa-timetable # Name of the ingress
-      domains:
-      - barbosajapan.maximemoreillon.com
----
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
@@ -61,7 +43,7 @@ spec:
   tls:
   - hosts:
     - barbosajapan.maximemoreillon.com
-    secretName: barbosa-timetable-secret # Name of the secret, i.e. the certificates
+    secretName: barbosa-timetable # Name of the secret, i.e. the certificates
   rules:
   - host: barbosajapan.maximemoreillon.com
     http:
