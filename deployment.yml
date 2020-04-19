@@ -12,14 +12,12 @@ spec:
       labels:
         app: barbosa-timetable
     spec:
-
       containers:
       - name: barbosa-timetable
         image: localhost:32000/barbosa-timetable
         imagePullPolicy: Always
         ports:
         - containerPort: 80
-
 ---
 apiVersion: v1
 kind: Service
@@ -30,7 +28,45 @@ metadata:
 spec:
   ports:
   - port: 80
-    nodePort: 30001
   selector:
     app: barbosa-timetable
-  type: LoadBalancer
+  type: ClusterIP
+---
+apiVersion: certmanager.k8s.io/v1alpha1
+kind: Certificate
+metadata:
+  name: barbosa-timetable-certificate
+spec:
+  secretName: barbosa-timetable-secret
+  issuerRef:
+    name: letsencrypt-prod
+    kind: ClusterIssuer
+  dnsNames:
+  - barbosajapan.maximemoreillon.com
+  acme:
+    config:
+    - http01:
+        ingress: barbosa-timetable # Name of the ingress
+      domains:
+      - barbosajapan.maximemoreillon.com
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: barbosa-timetable # Name of the ingress
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    cert-manager.io/cluster-issuer: "letsencrypt-prod" # This is necessary, no idea why
+spec:
+  tls:
+  - hosts:
+    - barbosajapan.maximemoreillon.com
+    secretName: barbosa-timetable-secret # Name of the secret, i.e. the certificates
+  rules:
+  - host: barbosajapan.maximemoreillon.com
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: barbosa-timetable # Name of the service
+          servicePort: 80
