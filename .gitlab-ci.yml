@@ -19,3 +19,5 @@ deployment:
     - kubectl rollout restart deployment/${APPLICATION_NAME}
   environment:
     name: staging
+    kubernetes:
+      namespace: moreillon
