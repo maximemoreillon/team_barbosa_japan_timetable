@@ -1,12 +1,5 @@
 <template>
   <div id="app">
-    <!--
-    <nav>
-      <router-link to="/nagoya">Nagoya</router-link>
-      <router-link to="/ogaki">Ogaki</router-link>
-      <router-link to="/handa">handa</router-link>
-    </nav>
-    -->
     <router-view/>
   </div>
 </template>
