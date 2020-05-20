@@ -1,54 +1,54 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: barbosa-timetable
+  name: ${APPLICATION_NAME}
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: barbosa-timetable
+      app: ${APPLICATION_NAME}
   template:
     metadata:
       labels:
-        app: barbosa-timetable
+        app: ${APPLICATION_NAME}
     spec:
       containers:
-      - name: barbosa-timetable
-        image: localhost:32000/barbosa-timetable
+      - name: ${APPLICATION_NAME}
+        image: ${CONTAINER_REGISTRY}/${APPLICATION_NAME}
         imagePullPolicy: Always
         ports:
         - containerPort: 80
+      imagePullSecrets:
+      - name: registry-credentials # Used to log in the registry
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  labels:
-    run: barbosa-timetable
-  name: barbosa-timetable
+  name: ${APPLICATION_NAME}
 spec:
   ports:
   - port: 80
   selector:
-    app: barbosa-timetable
+    app: ${APPLICATION_NAME}
   type: ClusterIP
 ---
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  name: barbosa-timetable # Name of the ingress
+  name: ${APPLICATION_NAME} # Name of the ingress
   annotations:
     kubernetes.io/ingress.class: "nginx"
-    cert-manager.io/cluster-issuer: "letsencrypt-prod" # This is necessary, no idea why
+    cert-manager.io/cluster-issuer: "letsencrypt-prod" # This specifies the certificate issuer
 spec:
   tls:
   - hosts:
     - barbosajapan.maximemoreillon.com
-    secretName: barbosa-timetable # Name of the secret, i.e. the certificates
+    secretName: ${APPLICATION_NAME} # Name of the secret, i.e. the certificates
   rules:
   - host: barbosajapan.maximemoreillon.com
     http:
       paths:
       - path: /
         backend:
-          serviceName: barbosa-timetable # Name of the service
+          serviceName: ${APPLICATION_NAME} # Name of the service
           servicePort: 80
