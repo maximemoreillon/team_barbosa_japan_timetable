@@ -28,11 +28,6 @@ const routes = [
     name: 'Handa',
     component: Handa
   },
-  {
-    path: '/payment',
-    name: 'Payment',
-    component: () => import('../views/Payment.vue')
-  },
 
 ]
 

@@ -4,7 +4,7 @@ stages:
 
 variables:
   APPLICATION_NAME: barbosa-timetable
-  CONTAINER_REGISTRY: registry.maximemoreillon.com
+  CERTIFICATE_DOMAIN: barbosajapan.maximemoreillon.com
 
 containerization:
   stage: containerization
@@ -20,4 +20,4 @@ deployment:
   environment:
     name: production
     kubernetes:
-      namespace: moreillon
+      namespace: ${KUBERNETES_NAMESPACE}

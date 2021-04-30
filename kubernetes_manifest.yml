@@ -14,12 +14,10 @@ spec:
     spec:
       containers:
       - name: ${APPLICATION_NAME}
-        image: ${CONTAINER_REGISTRY}/${APPLICATION_NAME}
+        image: ${DOCKER_IMAGE}
         imagePullPolicy: Always
         ports:
         - containerPort: 80
-      imagePullSecrets:
-      - name: registry-credentials # Used to log in the registry
 ---
 apiVersion: v1
 kind: Service
@@ -42,10 +40,10 @@ metadata:
 spec:
   tls:
   - hosts:
-    - barbosajapan.maximemoreillon.com
+    - ${CERTIFICATE_DOMAIN}
     secretName: ${APPLICATION_NAME} # Name of the secret, i.e. the certificates
   rules:
-  - host: barbosajapan.maximemoreillon.com
+  - host: ${CERTIFICATE_DOMAIN}
     http:
       paths:
       - path: /
